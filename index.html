@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin: 10px 0 5px;
+        }
+
+        input,
+        textarea,
+        select {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            background-color: #5cb85c;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        #thankYouMessage {
+            margin-top: 20px;
+            color: green;
+        }
+
+        .phone-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .phone-group select {
+            width: 100px;
+            margin-right: 10px;
+        }
+
+        .phone-group input {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Contact Us</h1>
+        <form id="contactForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="phone">Phone:</label>
+            <div class="phone-group">
+                <select id="countryCode" name="countryCode" required>
+                    <option value="+91">India (+91)</option>
+                    <option value="+62">Indonesia (+62)</option>
+                    <option value="+60">Malaysia (+60)</option>
+                    <option value="+65">Singapore (+65)</option>
+                </select>
+                <input type="tel" id="phone" name="phone" pattern="[0-9]{8,10}" required>
+            </div>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="query">Query:</label>
+            <textarea id="query" name="query" required></textarea>
+
+            <button type="submit">Submit</button>
+        </form>
+        <p id="thankYouMessage" style="display: none;">Thank you for your response. Our support team will be contacting
+            you.</p>
+    </div>
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var name = document.getElementById('name').value;
+            var countryCode = document.getElementById('countryCode').value;
+            var phone = document.getElementById('phone').value;
+            var email = document.getElementById('email').value;
+            var query = document.getElementById('query').value;
+
+            if (validateForm(name, phone, email)) {
+                document.getElementById('thankYouMessage').style.display = 'block';
+                document.getElementById('contactForm').style.display = 'none';
+            }
+            ///new api
+            console.log(name, countryCode, phone, email, query, "Incoming Values")
+
+            const data = JSON.stringify({
+                
+                            name: name
+
+                        })
+             
+            let myHeaders = new Headers();
+            myHeaders.append("Accept", "application/json");
+            myHeaders.append("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8");
+            myHeaders.append("Access-Control-Allow-Origin", "*");
+            myHeaders.append("Authorization", "a9c98542de90bba5baae968fdd76");
+            myHeaders.append("Connection", "keep-alive");
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("Origin", "https://sriram3099.github.io");
+            myHeaders.append("Referer", "https://sriram3099.github.io");
+            myHeaders.append("Sec-Fetch-Dest", "empty");
+            myHeaders.append("Sec-Fetch-Mode", "cors");
+            myHeaders.append("Sec-Fetch-Site", "cross-site");
+            myHeaders.append("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36");
+            myHeaders.append("sec-ch-ua", "\"Chromium\";v=\"112\", \"Google Chrome\";v=\"112\", \"Not:A-Brand\";v=\"99\"");
+            myHeaders.append("sec-ch-ua-mobile", "?0");
+            myHeaders.append("sec-ch-ua-platform", "\"macOS\"");
+            myHeaders.append("x-api-key", "jhoirmivboZPqXXaLh8Tofw76ExZrkOgBGamI0jR");
+            let requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: data,
+                redirect: 'follow'
+            };
+
+            fetch("https://cors-anywhere.herokuapp.com/https://r2.cloud.yellow.ai/integrations/sendevent/data-from-form/x1704961583047", requestOptions)
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
+            // Make the API call
+
+        });
+
+        function validateForm(name, phone, email) {
+            var nameValid = /^[a-zA-Z\s]+$/.test(name);
+            var phoneValid = /^[0-9]{8,10}$/.test(phone);
+            var emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+            if (!nameValid) {
+                alert('Please enter a valid name.');
+                return false;
+            }
+            if (!phoneValid) {
+                alert('Please enter a valid phone number.');
+                return false;
+            }
+            if (!emailValid) {
+                alert('Please enter a valid email address.');
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+
+</html>
